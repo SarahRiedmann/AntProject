@@ -5,10 +5,11 @@
 #include "Ant.h"
 
 
-Area::Area(int _index, Environment * _env): env(_env), index(_index)
+Area::Area(int _index): index(_index)
 {
-	x = index % env->getCols();
-	y = (index - x) / env->getCols();
+	Environment& env = Environment::getInstance();
+	x = index % env.getCols();
+	y = (index - x) / env.getCols();
 	//std::cout << x << " / " <<  y << std::endl;
 }
 
@@ -18,84 +19,84 @@ Area::~Area()
 }
 
 //setter functions
-void Area::setNorthWest(Area * a)
+void Area::setNorthWest(std::shared_ptr<Area> a)
 {
 	neighbors[NORTHWEST] = a;
 }
 
-void Area::setNorth(Area * a)
+void Area::setNorth(std::shared_ptr<Area> a)
 {
 	neighbors[NORTH] = a;
 }
 
-void Area::setNorthEast(Area * a)
+void Area::setNorthEast(std::shared_ptr<Area> a)
 {
 	neighbors[NORTHEAST] = a;
 }
 
-void Area::setEast(Area * a)
+void Area::setEast(std::shared_ptr<Area> a)
 {
 	neighbors[EAST] = a;
 }
 
-void Area::setSouthEast(Area * a)
+void Area::setSouthEast(std::shared_ptr<Area> a)
 {
 	neighbors[SOUTHEAST] = a;
 }
 
-void Area::setSouth(Area * a)
+void Area::setSouth(std::shared_ptr<Area> a)
 {
 	neighbors[SOUTH] = a;
 }
 
-void Area::setSouthWest(Area * a)
+void Area::setSouthWest(std::shared_ptr<Area> a)
 {
 	neighbors[SOUTHWEST] = a;
 }
 
-void Area::setWest(Area * a)
+void Area::setWest(std::shared_ptr<Area> a)
 {
 	neighbors[WEST] = a;
 }
 
 
 //getter functions
-Area * Area::getNorthWest()
+std::shared_ptr<Area> Area::getNorthWest()
 {
 	return neighbors[NORTHWEST];
 }
 
-Area * Area::getNorth()
+std::shared_ptr<Area> Area::getNorth()
 {
 	return neighbors[NORTH];
 }
 
-Area * Area::getNorthEast()
+std::shared_ptr<Area> Area::getNorthEast()
 {
 	return neighbors[NORTHEAST];
 }
 
-Area * Area::getEast()
+std::shared_ptr<Area> Area::getEast()
 {
 	return neighbors[EAST];
 }
 
-Area * Area::getSouthEast()
+std::shared_ptr<Area> Area::getSouthEast()
 {
 	return neighbors[SOUTHEAST];
 }
 
-Area * Area::getSouth()
+std::shared_ptr<Area> Area::getSouth()
 {
 	return neighbors[SOUTH];
 }
 
-Area * Area::getSouthWest()
+std::shared_ptr<Area> Area::getSouthWest()
 {
 	return neighbors[SOUTHWEST];
 }
 
-Area * Area::getWest()
+std::shared_ptr<Area> Area::getWest()
 {
 	return neighbors[WEST];
 }
@@ -133,9 +134,9 @@ unsigned int Area::getY()
 	return y;
 }
 
-std::vector<Area*> Area::getDirections()
+std::vector<std::shared_ptr<Area>> Area::getDirections()
 {
-	std::vector<Area*> validNeighbors;
+	std::vector<std::shared_ptr<Area>> validNeighbors;
 
 	for (unsigned int neighbor = 0; neighbor < neighbors.size(); neighbor++)
 	{

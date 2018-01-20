@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <memory>
 
 enum class Itemtyp {ant, anthill, food, pheromone};
 
@@ -7,12 +9,11 @@ class Area;
 class Creator
 {
 private:
-	static Creator* _instance;
 	Creator() {};
+	//~Creator() { std::cout << "Creator deleted!" << std::endl; };
 
 public:
-	static Creator* getInstance();
+	static Creator& getInstance();
 
-	Item* create(Itemtyp typ, Area* myarea);
+	Item* create(Itemtyp typ, std::shared_ptr<Area> myarea);
 };
-

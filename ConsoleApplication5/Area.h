@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <vector>
+#include <memory>
 #include "Environment.h"
 #include "Item.h"
 #include "Pheromone.h"
@@ -17,43 +18,42 @@
 
 class Ant;
 class Anthill;
-class Environment;
+
 class Area
 {
 private:
-	Environment* env;
 	int x;
 	int y;
 	int index;
 	
-	std::vector<Area*> neighbors = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-	std::vector<Area*> validNeighbors;
+	std::vector<std::shared_ptr<Area>> neighbors = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	//std::vector<std::shared_ptr<Area>> validNeighbors;
 
 public:
-	Area(int _index, Environment* env);
+	Area(int _index);
 	~Area();
 
 public:
 	std::vector<Item*> items;
 	Item* addToList(Item* item) { items.push_back(item); return item; };
 
-	void setNorthWest(Area* a);
-	void setNorth(Area* a);
-	void setNorthEast(Area* a);
-	void setEast(Area* a);
-	void setSouthEast(Area* a);
-	void setSouth(Area* a);
-	void setSouthWest(Area* a);
-	void setWest(Area* a);
+	void setNorthWest(std::shared_ptr<Area> a);
+	void setNorth(std::shared_ptr<Area> a);
+	void setNorthEast(std::shared_ptr<Area> a);
+	void setEast(std::shared_ptr<Area> a);
+	void setSouthEast(std::shared_ptr<Area> a);
+	void setSouth(std::shared_ptr<Area> a);
+	void setSouthWest(std::shared_ptr<Area> a);
+	void setWest(std::shared_ptr<Area> a);
 
-	Area* getNorthWest();
-	Area* getNorth();
-	Area* getNorthEast();
-	Area* getEast();
-	Area* getSouthEast();
-	Area* getSouth();
-	Area* getSouthWest();
-	Area* getWest();
+	std::shared_ptr<Area> getNorthWest();
+	std::shared_ptr<Area> getNorth();
+	std::shared_ptr<Area> getNorthEast();
+	std::shared_ptr<Area> getEast();
+	std::shared_ptr<Area> getSouthEast();
+	std::shared_ptr<Area> getSouth();
+	std::shared_ptr<Area> getSouthWest();
+	std::shared_ptr<Area> getWest();
 
 	void printName();
 	void showNeighbors();
@@ -61,7 +61,7 @@ public:
 	unsigned int getX();
 	unsigned int getY();
 
-	std::vector<Area*> getDirections();
+	std::vector<std::shared_ptr<Area>> getDirections();
 
 	Pheromone* getPheromone();
 	Food* getFirstFood();

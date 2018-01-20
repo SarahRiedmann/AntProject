@@ -7,20 +7,20 @@
 
 int Ant::idCounter = 0;
 
-Ant::Ant(Area* _myarea) : myarea(_myarea)
+Ant::Ant(std::shared_ptr<Area> _myarea) : myarea(_myarea)
 {
 	id = idCounter;
 	idCounter++;
 	rememberWayBack(myarea);
 }
 
-Area * Ant::getMyarea()
+std::shared_ptr<Area> Ant::getMyarea()
 {
 	return myarea;
 }
 
 
-void Ant::move(Area* nextArea)
+void Ant::move(std::shared_ptr<Area> nextArea)
 {
 	for (std::uint16_t i = 0; i < myarea->items.size(); i++)
 	{
@@ -51,7 +51,7 @@ void Ant::leavePheromoneTrace()
 		{
 			if (myarea->getAnthill() == nullptr)
 			{
-				 Creator::getInstance()->create(Itemtyp::pheromone, myarea);
+				 Creator::getInstance().create(Itemtyp::pheromone, myarea);
 		
 			}
 		}
@@ -77,7 +77,7 @@ void Ant::homeSweetHome()
 	throw AntLostException("Ant LOST!");
 }
 
-void Ant::rememberWayBack(Area* stepBack)
+void Ant::rememberWayBack(std::shared_ptr<Area> stepBack)
 {
 	wayBack.push_back(stepBack);
 }
@@ -93,10 +93,10 @@ void Ant::removeAnt()
 }
 
 
-Area * Ant::findPheromoneTrace()
+std::shared_ptr<Area> Ant::findPheromoneTrace()
 {
-	std::vector<Area*> directions = myarea->getDirections();
-	Area* neighborMostPheromones = randomDirection();
+	std::vector<std::shared_ptr<Area>> directions = myarea->getDirections();
+	std::shared_ptr<Area> neighborMostPheromones = randomDirection();
 	int maxPheromonlevel = 0;
 
 	for (std::uint16_t neighbor = 0; neighbor < directions.size(); neighbor++)
@@ -114,9 +114,9 @@ Area * Ant::findPheromoneTrace()
 	return neighborMostPheromones;
 }
 
-Area * Ant::randomDirection()
+std::shared_ptr<Area> Ant::randomDirection()
 {
-	std::vector<Area*> directions = myarea->getDirections();
+	std::vector<std::shared_ptr<Area>> directions = myarea->getDirections();
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -138,9 +138,9 @@ Food * Ant::tryfoodPickup()
 	return nullptr;
 }
 
-Area * Ant::findNeighborsFood()
+std::shared_ptr<Area> Ant::findNeighborsFood()
 {
-	std::vector<Area*> directions = myarea->getDirections();
+	std::vector<std::shared_ptr<Area>> directions = myarea->getDirections();
 
 	for (std::uint16_t neighbor = 0; neighbor < directions.size(); neighbor++)
 	{
@@ -158,7 +158,7 @@ Area * Ant::findNeighborsFood()
 
 void Ant::act()
 {
-	std::vector<Area*> directions = myarea->getDirections();
+	std::vector<std::shared_ptr<Area>> directions = myarea->getDirections();
 
 	if (hasChanged())
 	{
@@ -187,7 +187,7 @@ void Ant::act()
 		}
 		leavePheromoneTrace();
 
-		Area* nextArea = wayBack.back();
+		std::shared_ptr<Area> nextArea = wayBack.back();
 		wayBack.pop_back();
 		move(nextArea);
 
@@ -196,7 +196,7 @@ void Ant::act()
 
 	else
 	{
-		Area* nextArea = findNeighborsFood();		
+		std::shared_ptr<Area> nextArea = findNeighborsFood();		
 		if (nextArea != nullptr)
 		{
 			move(nextArea);

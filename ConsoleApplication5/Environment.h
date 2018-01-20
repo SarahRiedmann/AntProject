@@ -11,26 +11,22 @@ class Food;
 class Environment
 {
 private:
-	static Environment* _instance;
-
-	Area* root;
+	std::shared_ptr<Area> root;
 	int rows = -1;
 	int cols = -1;
-	std::vector<Area*> vectorAreas;
+	std::vector<std::shared_ptr<Area>> vectorAreas;
 
 private:
 	Environment();
 
 public:
-	~Environment();
-	static Environment* getInstance();
+	static Environment& getInstance();
 
 	int getRows();
 	int getCols();
-	Area* getRoot();
-	Area* getArea(int index);
-	Environment* setupEnv(int _rows, int _cols);
-	static void cleanUp();
+	std::shared_ptr<Area> getRoot();
+	std::shared_ptr<Area> getArea(int index);
+	Environment& setupEnv(int _rows, int _cols);
 	Anthill* addAnthill();
 	Anthill* addAnthill(unsigned int index);
 	Food* addFood(unsigned int index);

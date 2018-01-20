@@ -1,41 +1,41 @@
 #include "stdafx.h"
 #include "Test.h"
 
-int testWidth(Environment* env)
+int testWidth(Environment& env)
 {
-	Area* currentArea = env->getRoot();
+	std::shared_ptr<Area> currentArea = env.getRoot();
 	int j = 1;
 	while (currentArea->getEast() != NULL)
 	{
 		currentArea = currentArea->getEast();
 		j++;
 	}
-	if (j != env->getCols())
+	if (j != env.getCols())
 	{
 		return -1;
 	}
 	return 0;
 }
 
-int testHeight(Environment* env)
+int testHeight(Environment& env)
 {
-	Area* currentArea = env->getRoot();
+	std::shared_ptr<Area> currentArea = env.getRoot();
 	int i = 1;
 	while (currentArea->getSouth() != NULL)
 	{
 		currentArea = currentArea->getSouth();
 		i++;
 	}
-	if (i != env->getRows())
+	if (i != env.getRows())
 	{
 		return -1;
 	}
 	return 0;
 }
 
-/*int testRoundTrip(Environment* env)
+/*int testRoundTrip(Environment& env)
 {
-	Area* currentArea = env->getRoot();
+	std::shared_ptr<Area> currentArea = env.getRoot();
 	// einmal rundum gehen, außen muss NULL sein
 	// 4x nach Osten
 	currentArea = currentArea->getEast();
@@ -73,7 +73,7 @@ int testHeight(Environment* env)
 	currentArea = currentArea->getNorth();
 	if (currentArea->getWest() != NULL) return -1;
 	// Norden sollte nach einem Rundgang das Startfeld sein
-	if (currentArea->getNorth() != env->getRoot()) return -1;
+	if (currentArea->getNorth() != env.getRoot()) return -1;
 	// 3x nach Osten
 	currentArea = currentArea->getEast();
 	currentArea = currentArea->getEast();
@@ -98,11 +98,11 @@ int testHeight(Environment* env)
 
 int testAntMove()
 {
-	Environment::getInstance()->clearAll();
-	Area* area = Environment::getInstance()->getArea(16);
-	Ant* ant = static_cast<Ant*>(Creator::getInstance()->create(Itemtyp::ant, area));
-	Area* startingPoint = ant->getMyarea();
-	std::vector<Area*> neighbors = startingPoint->getDirections();
+	Environment::getInstance().clearAll();
+	std::shared_ptr<Area> area = Environment::getInstance().getArea(16);
+	Ant* ant = static_cast<Ant*>(Creator::getInstance().create(Itemtyp::ant, area));
+	std::shared_ptr<Area> startingPoint = ant->getMyarea();
+	std::vector<std::shared_ptr<Area>> neighbors = startingPoint->getDirections();
 
 	std::cout << "I started on Area " << startingPoint->getX() << ", " << startingPoint->getY() << std::endl;
 	std::cout << "I have " << neighbors.size() << " neighbors!" << std::endl;
@@ -122,7 +122,7 @@ int testAntMove()
 		}
 	}
 
-	Area* newArea = ant->getMyarea();
+	std::shared_ptr<Area> newArea = ant->getMyarea();
 	std::cout << "I am now on Area " << newArea->getX() << ", " << newArea->getY() << std::endl;
 	delete ant;
 	return -1;
@@ -130,9 +130,9 @@ int testAntMove()
 
 int testPheromones()
 {
-	Environment::getInstance()->clearAll();
-	Area* area = Environment::getInstance()->getArea(7);
-	Pheromone* pheromon = static_cast<Pheromone*>(Creator::getInstance()->create(Itemtyp::pheromone, area));
+	Environment::getInstance().clearAll();
+	std::shared_ptr<Area> area = Environment::getInstance().getArea(7);
+	Pheromone* pheromon = static_cast<Pheromone*>(Creator::getInstance().create(Itemtyp::pheromone, area));
 	int intensity = pheromon->getIntensity();
 	std::cout << "Pheromon level at the beginning: " << intensity << std::endl;
 	pheromon->act();
@@ -150,11 +150,11 @@ int testPheromones()
 
 int testFood()
 {
-	Environment::getInstance()->clearAll();
-	Area* area = Environment::getInstance()->getArea(7);
+	Environment::getInstance().clearAll();
+	std::shared_ptr<Area> area = Environment::getInstance().getArea(7);
 	for (int i = 0; i < 5; i++)
 	{
-		Item* food = Creator::getInstance()->create(Itemtyp::food, area);
+		Item* food = Creator::getInstance().create(Itemtyp::food, area);
 		area->items.push_back(food);
 	}
 
@@ -179,9 +179,9 @@ int testFood()
 
 int testAnthill()
 {
-	Environment::getInstance()->clearAll();
-	Area* area = Environment::getInstance()->getArea(7);
-	Anthill* anthill = static_cast<Anthill*>(Creator::getInstance()->create(Itemtyp::anthill, area));
+	Environment::getInstance().clearAll();
+	std::shared_ptr<Area> area = Environment::getInstance().getArea(7);
+	Anthill* anthill = static_cast<Anthill*>(Creator::getInstance().create(Itemtyp::anthill, area));
 	//static_cast<Anthill*>(anthill)->addFood();
 	
 	int foodlevel = anthill->getFoodLevel();
@@ -218,11 +218,11 @@ int testAnthill()
 
 int testAnthillSetup()
 {
-	Environment::getInstance()->clearAll();
-	Environment* env = Environment::getInstance();
+	Environment::getInstance().clearAll();
+	Environment& env = Environment::getInstance();
 
-	env->addAnthill((size_t)7);
-	std::map<int, Anthill*> anthills = env->getAllAnthills();
+	env.addAnthill((size_t)7);
+	std::map<int, Anthill*> anthills = env.getAllAnthills();
 
 	if (anthills.count((size_t)7) == 1) 
 	{ 
@@ -234,17 +234,17 @@ int testAnthillSetup()
 
 int testAntLifecycle()
 {
-	Environment* env = Environment::getInstance();
-	env->clearAll();
+	Environment& env = Environment::getInstance();
+	env.clearAll();
 
-	Area* area = Environment::getInstance()->getArea(16);
-	Ant* ant = static_cast<Ant*>(Creator::getInstance()->create(Itemtyp::ant, area));
+	std::shared_ptr<Area> area = Environment::getInstance().getArea(16);
+	Ant* ant = static_cast<Ant*>(Creator::getInstance().create(Itemtyp::ant, area));
 	for (int i = 0; i < Ant::MAX_YEARS_TO_LIVE; i++)
 	{
 		ant->act();
 		ant->reset();
 
-		std::map<int, std::vector<Ant*>> ants = env->getAllAnts();
+		std::map<int, std::vector<Ant*>> ants = env.getAllAnts();
 		std::vector<Ant*> antsOnArea = ants.begin()->second;
 		if (ants.size() != 1 || antsOnArea.size() != 1) 
 		{
@@ -258,7 +258,7 @@ int testAntLifecycle()
 	ant->act();
 	ant->reset();
 
-	std::map<int, std::vector<Ant*>> ants = env->getAllAnts();
+	std::map<int, std::vector<Ant*>> ants = env.getAllAnts();
 
 	if (ants.size() != 0)
 	{
@@ -273,17 +273,17 @@ int testAntLifecycle()
 
 int testFoodSetup()
 {
-	Environment* env = Environment::getInstance();
-	env->clearAll();
+	Environment& env = Environment::getInstance();
+	env.clearAll();
 
 	unsigned int numFood = 6;
-	unsigned int randIndex = env->getRandArea();
+	unsigned int randIndex = env.getRandArea();
 	for (int i = 0; i < numFood; i++)
 	{
-		env->addFood(randIndex);
+		env.addFood(randIndex);
 	}
 
-	std::vector<Food*> foodMenu = env->getArea(randIndex)->getAllFoodOnArea();
+	std::vector<Food*> foodMenu = env.getArea(randIndex)->getAllFoodOnArea();
 	if (foodMenu.size() != numFood)
 	{
 		std::cout << "Food Setup failed: " << foodMenu.size() << " Food on Area!" << std::endl;
@@ -295,8 +295,8 @@ int testFoodSetup()
 
 int testAll()
 {
-	Environment* env = Environment::getInstance();
-	env->clearAll();
+	Environment& env = Environment::getInstance();
+	env.clearAll();
 
 	std::cout << "Starte Test 'testHeight' ..." << std::endl;
 	if (testHeight(env) != 0)

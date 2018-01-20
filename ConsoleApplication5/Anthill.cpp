@@ -4,7 +4,7 @@
 #include "Creator.h"
 #include "Area.h"
 
-Anthill::Anthill(Area* _myarea)
+Anthill::Anthill(std::shared_ptr<Area> _myarea)
 {
 	myarea = _myarea;
 }
@@ -19,7 +19,7 @@ void Anthill::setFoodlevel(unsigned int newfoodlevel)
 	foodlevel = newfoodlevel;
 }
 
-Area * Anthill::getMyarea()
+std::shared_ptr<Area> Anthill::getMyarea()
 {
 	return myarea;
 }
@@ -35,7 +35,7 @@ void Anthill::act()
 	if (foodlevel > 0)
 	{
 		// TODO : delete ant elements wenn der life cycle vorbei ist
-		Item* ant = Creator::getInstance()->create(Itemtyp::ant, myarea);
+		Item* ant = Creator::getInstance().create(Itemtyp::ant, myarea);
 		foodlevel--;
 	}
 	

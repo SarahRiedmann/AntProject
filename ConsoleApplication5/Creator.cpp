@@ -9,19 +9,14 @@
 #include <cassert>
 #include <iostream>
 
-Creator* Creator::_instance = nullptr;
-
-Creator * Creator::getInstance()
+Creator& Creator::getInstance()
 {
-	if (_instance == nullptr)
-	{
-		_instance = new Creator;
-	}
-	return _instance;
+	static Creator instance;
+	return instance;
 }
 
 
-Item* Creator::create(Itemtyp typ, Area* myarea)
+Item* Creator::create(Itemtyp typ, std::shared_ptr<Area> myarea)
 {
 	assert(myarea != nullptr);
 

@@ -10,14 +10,14 @@ class Anthill :
 	public Item
 {
 private:
-	Area* myarea;
+	std::shared_ptr<Area> myarea;
 	unsigned int foodlevel = 1;
 
 public:
-	Anthill(Area* _myarea);
+	Anthill(std::shared_ptr<Area> _myarea);
 	void addFood();
 	void setFoodlevel(unsigned int newfoodlevel);
-	Area* getMyarea();
+	std::shared_ptr<Area> getMyarea();
 	unsigned int getFoodLevel();
 
 	void act() override;

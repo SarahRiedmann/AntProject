@@ -19,26 +19,26 @@ private:
 	static int idCounter;
 	int id;
 
-	Area* myarea;
+	std::shared_ptr<Area> myarea;
 	bool hasFood;
 	int yearsToLive = MAX_YEARS_TO_LIVE;
 
-	std::vector<Area*> wayBack;
+	std::vector<std::shared_ptr<Area>> wayBack;
 
-	void move(Area* nextArea);
+	void move(std::shared_ptr<Area> nextArea);
 	void leavePheromoneTrace();
 	void homeSweetHome();
-	void rememberWayBack(Area* stepBack);
+	void rememberWayBack(std::shared_ptr<Area> stepBack);
 	void removeAnt();
 	
 	Food* tryfoodPickup();
-	Area* findNeighborsFood();
-	Area* findPheromoneTrace();
-	Area* randomDirection();
+	std::shared_ptr<Area> findNeighborsFood();
+	std::shared_ptr<Area> findPheromoneTrace();
+	std::shared_ptr<Area> randomDirection();
 
 public:
-	Ant(Area* _myarea);
-	Area* getMyarea();
+	Ant(std::shared_ptr<Area> _myarea);
+	std::shared_ptr<Area> getMyarea();
 
 	void act() override;
 };

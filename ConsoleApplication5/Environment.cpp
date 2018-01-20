@@ -1,35 +1,23 @@
 #include "stdafx.h"
-#include "Environment.h"
 #include <list>
 #include <iostream>
 #include <cassert>
 #include <random>
+#include <memory>
 #include "Area.h"
+#include "Environment.h"
 #include "Anthill.h"
 
-Environment* Environment::_instance = nullptr;
 
 Environment::Environment()
 {
 }
 
-Environment::~Environment()
-{
-	for (unsigned int i = 0; i < vectorAreas.size(); i++)
-	{
-		delete(vectorAreas[i]);
-	}
-	//std::cout << vectorAreas.size() << " Areas deleted" << std::endl;
-}
 
-
-Environment * Environment::getInstance()
+Environment& Environment::getInstance()
 {
-	if (_instance == nullptr)
-	{
-		_instance = new Environment;
-	}
-	return _instance;
+	static Environment instance;
+	return instance;
 }
 
 
@@ -49,14 +37,14 @@ void Environment::createAreas()
 
 	for (int i = 0; i < numAreas; i++)
 	{
-		Area* temp = new Area(i, this);
+		std::shared_ptr<Area> temp = std::make_shared<Area>(i);
 		vectorAreas.push_back(temp);
 	}
 }
 
 void Environment::linkAreas()
 {
-	Area* pArea;
+	std::shared_ptr<Area> pArea;
 	int x, y;
 	for (unsigned int i = 0; i < vectorAreas.size(); i++)
 	{
@@ -143,18 +131,18 @@ void Environment::linkAreas()
 	}
 }
 
-Area* Environment::getRoot()
+std::shared_ptr<Area> Environment::getRoot()
 {
 	root = vectorAreas.front();
 	return root;
 }
 
-Area* Environment::getArea(int index)
+std::shared_ptr<Area> Environment::getArea(int index)
 {
 	return vectorAreas[index];
 }
 
-Environment* Environment::setupEnv(int _rows, int _cols)
+Environment& Environment::setupEnv(int _rows, int _cols)
 {
 	assert(rows == -1 && cols == -1);
 
@@ -164,18 +152,9 @@ Environment* Environment::setupEnv(int _rows, int _cols)
 		createAreas();
 		linkAreas();
 
-		return this;
+		return *this;
 }
 
-void Environment::cleanUp()
-{
-	if (_instance != nullptr)
-	{
-		delete _instance;
-		_instance = nullptr;
-		std::cout << "Environment instance deleted!" << std::endl;
-	}
-}
 
 Anthill * Environment::addAnthill()
 {
@@ -190,7 +169,7 @@ Anthill* Environment::addAnthill(unsigned int index)
 	assert(index < static_cast<unsigned int>(rows * cols));
 	assert(vectorAreas[index]->getAnthill() == nullptr);
 
-	Item* anthill = Creator::getInstance()->create(Itemtyp::anthill, vectorAreas[index]);
+	Item* anthill = Creator::getInstance().create(Itemtyp::anthill, vectorAreas[index]);
 	vectorAreas[index]->items.push_back(anthill);
 
 	return dynamic_cast<Anthill*>(anthill);
@@ -200,7 +179,7 @@ Food * Environment::addFood(unsigned int index)
 {
 	assert(index < static_cast<unsigned int>(rows * cols));
 
-	Item* food = Creator::getInstance()->create(Itemtyp::food, getArea(index));
+	Item* food = Creator::getInstance().create(Itemtyp::food, getArea(index));
 
 	return dynamic_cast<Food*>(food);
 }
