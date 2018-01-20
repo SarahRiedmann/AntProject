@@ -1,0 +1,21 @@
+﻿  stdafx.cpp
+  Test.cpp
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\test.cpp(278): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+  Pheromone.cpp
+  Food.cpp
+  Environment.cpp
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\environment.cpp(221): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\environment.cpp(236): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\environment.cpp(255): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\environment.cpp(263): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\environment.cpp(268): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+  Creator.cpp
+  ConsoleApplication5.cpp
+  Area.cpp
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\area.cpp(244): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+c:\users\sarah\source\repos\consoleapplication5\consoleapplication5\area.cpp(253): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+  AntLostException.cpp
+  Anthill.cpp
+  Ant.cpp
+  Code wird generiert...
+  ConsoleApplication5.vcxproj -> C:\Users\sarah\source\repos\Probeklausur\Debug\ConsoleApplication5.exe
